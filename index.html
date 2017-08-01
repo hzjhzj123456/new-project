@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style type="text/css">
+		html,body{
+			margin:0px;
+			height:100%;
+		}
+		@font-face{
+			font-family: 'iconfont';
+      		src: url('./fonts/font_u8lcaa5uh625u3di.eot');
+      		src: url('./fonts/font_u8lcaa5uh625u3di.eot') format('embedded-opentype'),
+            url('./fonts/font_u8lcaa5uh625u3di.woff') format('woff'),
+            url('./fonts/font_u8lcaa5uh625u3di.ttf') format('truetype'),
+            url('./fonts/font_u8lcaa5uh625u3di.svg#iconfont') format('svg');
+		}
+		.iconfont{
+            font-family:"iconfont";
+            font-size:32px;
+            font-style:normal;
+            -webkit-font-smoothing: antialiased;
+            -webkit-text-stroke-width: 0.2px;
+            -moz-osx-font-smoothing: grayscale;
+        }
+		.container{
+			width:250px;
+			height:100%;
+			margin:0px auto;
+			background:black;
+			position:relative;
+		}
+		.conon{
+			width:60px;
+			height:68px;
+			background:url(./images/icon-pao.png);
+			background-size:cover;
+			position:absolute;
+			bottom:0px;
+			left:50%;
+			margin-left:-30px;
+		}
+		.heart{
+			position:absolute;
+		}
+	</style>
+</head>
+<body>
+	<div class='container'>
+		<div class='conon'></div>
+	</div>
+	<script type="text/javascript">
+		var container=document.getElementsByClassName('container')[0];
+		var colors=['red','green','blue','gold','purple','orange','yellowgreen','skyblue','khaki','yellow']
+		function createHeart(){
+			var heart=document.createElement('div');
+			heart.classList.add('heart');
+			heart.classList.add('iconfont');
+			var offset=Math.random()*40-20;
+			heart.style.left=100+offset+'px';
+			heart.style.bottom='65px';
+			heart.style.opacity='.8';
+			heart.style.fontSize='32px';
+			var colorIndex=Math.floor(Math.random()*colors.length);
+			heart.style.color=colors[colorIndex];
+			heart.innerHTML='&#xe60d;';
+			container.appendChild(heart);
+			return {
+				heart:heart,
+				speed:.5
+			};
+		}
+		var hearts=[];
+		hearts.push(createHeart());
+		var accelertion= .05 ;
+		setInterval(function(){
+			var toBeDeleted=[];
+			hearts.forEach(function(heartObj,idx){
+				var heart=heartObj.heart;
+				if(heart){
+					enlargeHeart(heart,.35);
+					var curPos=getHeartPos(heart);
+					//console.log(curPos);
+					curPos+=heartObj.speed;
+					//console.log(heartObj.speed);
+					console.log(curPos);
+					setHeartPos(heart,curPos);
+					if(getHeartPos(heart)>700){
+						container.removeChild(heart);
+						toBeDeleted.push(idx);
+					}
+					heartObj.speed+=accelertion;
+				}
+			});
+			for (var i = 0; i < toBeDeleted.length; i++) {
+				hearts.splice(toBeDeleted[i],1);
+			}
+			if(Math.random()<.1){
+				hearts.push(createHeart());
+			}
+		},20);
+		function getHeartPos(heart){
+			return Number(heart.style.bottom.slice(0,-2));
+		}
+		function setHeartPos(heart,pos){
+			heart.style.bottom=pos+'px';
+		}
+		function enlargeHeart(heart,speed){
+			var curFontSize=Number(heart.style.fontSize.slice(0,-2));
+			curFontSize+=speed;
+			heart.style.fontSize=curFontSize+'px';
+		}
+	</script>
+</body>
+</html>
